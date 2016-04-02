@@ -1,4 +1,4 @@
-package nowcoder.ctci;
+package stringAndArrays_1;
 
 import java.util.Scanner;
 
