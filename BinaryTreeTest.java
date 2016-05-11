@@ -1,6 +1,7 @@
 package com.ethfoo.algo;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
 
@@ -20,19 +21,19 @@ public class BinaryTreeTest {
 	 *                  / \
 	 *                 5   11
 	 *                / \   \
-	 *               3   6   9
+	 *               3   7   13
 	 *                  /
-	 *                 4                 
+	 *                 12                 
 	 */
 	public TreeNode buildBinaryTree(){
 		TreeNode head = new TreeNode(8);
 		head.left = new TreeNode(5);
 		head.right = new TreeNode(11);
 		head.left.left = new TreeNode(3);
-		head.left.right = new TreeNode(6);
-		head.right.right = new TreeNode(9);
+		head.left.right = new TreeNode(7);
+		head.right.right = new TreeNode(13);
 		
-		head.left.right.left = new TreeNode(4);
+		head.left.right.left = new TreeNode(12);
 		
 		return head;
 	}
@@ -138,6 +139,68 @@ public class BinaryTreeTest {
 		return (leftDepth>rightDepth ? leftDepth+1 : rightDepth+1);
 	}
 	
+	/*
+	 *二叉树的和为某一值的路径 
+	 */
+	public void findPath(TreeNode root, int expectSum){
+		if( root == null ) throw new RuntimeException("root is null");
+		LinkedList<TreeNode> list = new LinkedList<>();
+		int currentSum = 0;
+		findPath(root, expectSum, list, currentSum);
+	}
+	private void findPath(TreeNode root, int expectSum, LinkedList<TreeNode> path, int currentSum){
+		currentSum += root.value;
+		path.push(root);
+		
+		boolean isLeaf = root.left == null && root.right == null;
+		if( currentSum == expectSum && isLeaf ){
+			System.out.println("A path is found");
+			for(TreeNode node : path){
+				System.out.println(node.value);
+			}
+			System.out.println("****************");
+		}
+		
+		if( root.left != null){
+			findPath(root.left, expectSum, path, currentSum);
+		}
+		if( root.right != null ){
+			findPath(root.right, expectSum, path, currentSum);
+		}
+		
+		path.pop();
+	}
+	
+	/*
+	 * 判断一颗树是否是平衡二叉树
+	 */
+	public boolean isBalance(TreeNode root){
+		if( checkHeight(root) == -1 ){
+			return false;
+		}else {
+			return true;
+		}
+	}
+	private int checkHeight(TreeNode root){
+		if( root == null ) return 0;
+		
+		int leftHeight = checkHeight(root.left);
+		if( leftHeight == -1 ){
+			return -1;
+		}
+		
+		int rightHeight = checkHeight(root.right);
+		if( rightHeight == -1 ){
+			return -1;
+		}
+		
+		int heightDiff = leftHeight - rightHeight;
+		if( Math.abs(heightDiff)>1 ){
+			return -1;
+		}else{
+			return Math.max(leftHeight, rightHeight) + 1;
+		}
+	}
 	
 	
 	public static void main(String[] args) {
@@ -148,8 +211,10 @@ public class BinaryTreeTest {
 		//test.levelTraversal(head);
 		
 		//System.out.println(test.treeDepth(root));
-		int a[] = {};
-		System.out.println(test.isBST(a, a.length));
+		//int a[] = {};
+		//System.out.println(test.isBST(a, a.length));
+		
+		test.findPath(root, 32);
 	}
 	
 }
